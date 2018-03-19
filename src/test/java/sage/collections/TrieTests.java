@@ -170,4 +170,52 @@ public class TrieTests {
         assertTrue(r3.equals(p1) || r3.equals(p2));
     }
 
+    @Test
+    public void testAndJoinWithSameKey() {
+
+        Trie<String> trie1= new Trie<>();
+        trie1.insert(Arrays.asList("a", "b", "c"));
+        trie1.insert(Arrays.asList("a", "b", "e"));
+        trie1.insert(Arrays.asList("a", "d"));
+        trie1.insert(Arrays.asList("b", "c"));
+        Trie<String> trie2 = new Trie<>();
+        trie2.insert(Arrays.asList("a", "b", "c"));
+        trie2.insert(Arrays.asList("a", "d", "e"));
+        trie2.insert(Arrays.asList("b", "c"));
+
+        // Two nodes are joint only if they have the same key
+        Trie<String> jointTrie = trie1.andJoin(trie2, (s1, s2) -> s1.equals(s2) ? s1 : null);
+
+        assertTrue(jointTrie.containsSequence(Arrays.asList("a", "b", "c")));
+        assertTrue(jointTrie.containsSequence(Arrays.asList("b", "c")));
+
+        assertFalse(jointTrie.containsSequence(Arrays.asList("a", "b", "e")));
+        assertFalse(jointTrie.containsSequence(Arrays.asList("a", "d")));
+        assertFalse(jointTrie.containsSequence(Arrays.asList("a", "d", "e")));
+    }
+
+    @Test
+    public void testAndJoinConcatenatingKey() {
+
+        Trie<String> trie1= new Trie<>();
+        trie1.insert(Arrays.asList("a", "b", "c"));
+        trie1.insert(Arrays.asList("a", "b", "e"));
+        trie1.insert(Arrays.asList("a", "d"));
+        trie1.insert(Arrays.asList("b", "c"));
+        Trie<String> trie2 = new Trie<>();
+        trie2.insert(Arrays.asList("a", "b", "c"));
+        trie2.insert(Arrays.asList("a", "d", "e"));
+        trie2.insert(Arrays.asList("b", "c"));
+
+        // The result of two nodes is their key concatenation
+        Trie<String> jointTrie = trie1.andJoin(trie2, (s1, s2) -> s1 + s2);
+
+        assertTrue(jointTrie.containsSequence(Arrays.asList("aa", "bb", "cc")));
+        assertTrue(jointTrie.containsSequence(Arrays.asList("aa", "bb", "ec")));
+        assertTrue(jointTrie.containsSequence(Arrays.asList("aa", "bd", "ee")));
+        assertTrue(jointTrie.containsSequence(Arrays.asList("aa", "bd", "ce")));
+        assertTrue(jointTrie.containsSequence(Arrays.asList("ab", "dc")));
+        assertTrue(jointTrie.containsSequence(Arrays.asList("bb", "cc")));
+    }
+
 }
