@@ -46,6 +46,7 @@ public class TrieTests {
         assertEquals(0, t2.get("x").children.size());
     }
 
+
     @Test
     public void testInsertIntegerKeys() {
 
@@ -94,6 +95,55 @@ public class TrieTests {
         assertTrue(t4.get(5).children.isEmpty());
     }
 
+
+    @Test
+    public void testContains() {
+        List<String> p1 = Arrays.asList("a", "b", "def");
+        List<String> p2 = Arrays.asList("a", "b", "x");
+        List<String> p3 = Arrays.asList("a", "c", "e");
+
+        Trie<String> trie = new Trie<>();
+        trie.insert(p1);
+        trie.insert(p2);
+        trie.insert(p3);
+
+        assertTrue(trie.contains(p1));
+        assertTrue(trie.contains(p2));
+        assertTrue(trie.contains(p3));
+        assertTrue(trie.contains(Arrays.asList("a")));
+        assertTrue(trie.contains(Arrays.asList("a", "b")));
+
+        assertFalse(trie.contains(Arrays.asList("c")));
+        assertFalse(trie.contains(Arrays.asList("b")));
+        assertFalse(trie.contains(Arrays.asList("a", "x")));
+        assertFalse(trie.contains(Arrays.asList("a", "c", "b")));
+    }
+
+
+    @Test
+    public void testContainsSequence() {
+        List<String> p1 = Arrays.asList("a", "b", "def");
+        List<String> p2 = Arrays.asList("a", "b", "x");
+        List<String> p3 = Arrays.asList("a", "c", "e");
+
+        Trie<String> trie = new Trie<>();
+        trie.insert(p1);
+        trie.insert(p2);
+        trie.insert(p3);
+
+        assertTrue(trie.containsSequence(p1));
+        assertTrue(trie.containsSequence(p2));
+        assertTrue(trie.containsSequence(p3));
+
+        assertFalse(trie.containsSequence(Arrays.asList("a")));
+        assertFalse(trie.containsSequence(Arrays.asList("a", "b")));
+        assertFalse(trie.containsSequence(Arrays.asList("c")));
+        assertFalse(trie.containsSequence(Arrays.asList("b")));
+        assertFalse(trie.containsSequence(Arrays.asList("a", "x")));
+        assertFalse(trie.containsSequence(Arrays.asList("a", "c", "b")));
+    }
+
+
     @Test
     public void testIterator() {
         List<String> p1 = Arrays.asList("a", "bc", "def");
@@ -119,7 +169,5 @@ public class TrieTests {
         assertTrue(r2.equals(p1) || r2.equals(p2));
         assertTrue(r3.equals(p1) || r3.equals(p2));
     }
-
-
 
 }
